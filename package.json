@@ -1,0 +1,86 @@
+{
+    "name": "vscode-quickxdev",
+    "displayName": "QuickXDev",
+    "description": "Quick-Cocos2dx develop for vscode",
+    "version": "0.0.1",
+    "publisher": "lonewolf",
+    "engines": {
+        "vscode": "^1.25.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/leitwolf/vscode-QuickXDev.git"
+    },
+    "bugs": {
+        "url": "https://github.com/leitwolf/vscode-QuickXDev/issues"
+    },
+    "homepage": "https://github.com/leitwolf/vscode-QuickXDev/blob/master/README.md",
+    "keywords": [
+        "lua",
+        "quick cocos2dx"
+    ],
+    "icon": "icon.png",
+    "categories": [
+        "Programming Languages",
+        "Snippets"
+    ],
+    "activationEvents": [
+        "onLanguage:lua"
+    ],
+    "main": "./out/src/client/extension",
+    "contributes": {
+        "configuration": {
+            "type": "Object",
+            "title": "QuickXDev 配置",
+            "properties": {
+                "quickxdev.root": {
+                    "scope": "resource",
+                    "type": "string",
+                    "default": null,
+                    "description": "Quick-Cocos2dx 根目录，通常会自动获取"
+                }
+            }
+        },
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "quickxdev.runPlayer",
+                    "when": "resourceLangId == lua",
+                    "group": "navigation"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "title": "在 Player 中运行",
+                "command": "quickxdev.runPlayer"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "lua",
+                "path": "./files/snippets.json"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "dependencies": {
+        "luaparse": "^0.2.1",
+        "rd": "^2.0.1",
+        "crlf-helper": "^0.1.0",
+        "vscode-languageclient": "^5.0.1",
+        "vscode-languageserver": "^5.0.3"
+    },
+    "devDependencies": {
+        "@types/luaparse": "^0.0.29",
+        "@types/mocha": "^5.2.5",
+        "@types/node": "^10.7.1",
+        "mocha": "^5.2.0",
+        "typescript": "^3.0.1",
+        "vscode": "^1.1.21"
+    }
+}

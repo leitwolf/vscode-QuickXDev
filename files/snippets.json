@@ -1,0 +1,102 @@
+{
+    "comment": {
+        "prefix": "comment",
+        "body": [
+            "--[[",
+            "\t$0",
+            "--]]"
+        ]
+    },
+    "do_end": {
+        "prefix": "do",
+        "body": [
+            "do",
+            "\t${0:--todo}",
+            "end"
+        ]
+    },
+    "if": {
+        "prefix": "if",
+        "body": [
+            "if ${1:conditions} then",
+            "\t${0:--todo}",
+            "end"
+        ]
+    },
+    "if_else": {
+        "prefix": "ife",
+        "body": [
+            "if ${1:conditions} then",
+            "\t${2:--todo}",
+            "else",
+            "\t${0:--todo}",
+            "end"
+        ]
+    },
+    "if_elseif": {
+        "prefix": "ifel",
+        "body": [
+            "if ${1:conditions} then",
+            "\t${2:--todo}",
+            "elseif ${3:conditions} then",
+            "\t${0:--todo}",
+            "end"
+        ]
+    },
+    "if_elseif_else": {
+        "prefix": "ifee",
+        "body": [
+            "if ${1:conditions} then",
+            "\t${2:--todo}",
+            "elseif ${3:conditions} then",
+            "\t${4:--todo}",
+            "else",
+            "\t${0:--todo}",
+            "end"
+        ]
+    },
+    "else": {
+        "prefix": "else",
+        "body": [
+            "else",
+            "\t${0:--todo}"
+        ]
+    },
+    "elseif": {
+        "prefix": "elseif",
+        "body": [
+            "elseif ${1:conditions} then",
+            "\t${0:--todo}"
+        ]
+    },
+    "repeat_until": {
+        "prefix": "repeat",
+        "body": [
+            "repeat",
+            "\t${1:--todo}",
+            "until ${0:true}"
+        ]
+    },
+    "while": {
+        "prefix": "while",
+        "body": [
+            "while ${1:true} do",
+            "\t${0:--todo}",
+            "end"
+        ]
+    },
+    "function": {
+        "prefix": "func",
+        "body": [
+            "function ${1:name}(${2})",
+            "\t$0",
+            "end"
+        ]
+    },
+    "local": {
+        "prefix": "local",
+        "body": [
+            "local ${1:a} = $0"
+        ]
+    }
+}

@@ -146,7 +146,6 @@ function runPlayer() {
             return;
         }
 
-        workDirUri = URI.file("D:\\dev\\app\\app\\demo");
         let playerFsPath = URI.parse(playerPath).fsPath;
         // 加上参数
         let args: string[] = [];

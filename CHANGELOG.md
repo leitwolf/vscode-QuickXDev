@@ -1,3 +1,6 @@
+# [0.0.2] - 2018-09-02
+修复运行Player错误的问题
+
 # [0.0.1] - 2018-09-01
 vscode第一版，适配 Quick-Cocos2dx-Community 3.7.2版
 - cocos2dx c++端的代码提示

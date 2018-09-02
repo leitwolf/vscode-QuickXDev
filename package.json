@@ -2,7 +2,7 @@
     "name": "vscode-quickxdev",
     "displayName": "QuickXDev",
     "description": "Quick-Cocos2dx develop for vscode",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "lonewolf",
     "engines": {
         "vscode": "^1.25.0"

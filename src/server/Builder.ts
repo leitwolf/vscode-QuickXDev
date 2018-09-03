@@ -310,6 +310,9 @@ class Builder0 {
         // console.log("def", str, prev, after);
 
         let paths = str.split(/\.|\:/);
+        if (paths.length == 0) {
+            return [];
+        }
         let locations: Location[] = [];
         this.findLocation(paths, this._cppList, null, locations);
         for (let i = 0; i < this._fileList.length; i++) {
@@ -319,10 +322,9 @@ class Builder0 {
             }
             this.findLocation(paths, file.globals, file.uri, locations);
         }
-        if (locations.length == 0 && paths.length == 1) {
-            // 只有一个且不是模块中的，则全部都要检测
-            let name = paths[0];
-            // console.log("all def", name);
+        if (locations.length == 0) {
+            // 如果找不到，则只检测最后一项
+            let name = paths[paths.length - 1];
             this.addAllDefinition(name, this._cppList, null, locations);
             for (let i = 0; i < this._fileList.length; i++) {
                 const file = this._fileList[i];

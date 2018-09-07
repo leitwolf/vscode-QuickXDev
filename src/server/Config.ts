@@ -62,7 +62,7 @@ class Config0 {
         if (this._settings.root) {
             this._quickRoot = URI.file(this._settings.root).toString();
         }
-        // console.log(this._quickRoot);
+        console.log("QuickX root:", this._quickRoot);
 
         // 通知前端quick目录
         ServerProxy.sendRequest("quickRoot", this.quickRoot);

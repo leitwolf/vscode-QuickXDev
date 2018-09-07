@@ -21,7 +21,7 @@ let debugPort = 6009;
 let outputChannel: OutputChannel;
 
 // 任务栏信息
-let statusBar: StatusBarItem;
+let statusBars: StatusBarItem[] = [];
 // Quick目录
 let quickRoot: string;
 let playerProcess: ChildProcess;
@@ -56,17 +56,20 @@ function createClient(folder: WorkspaceFolder) {
     // 定义自定义事件
     client.onReady().then(() => {
         // 显示/隐藏任务栏
-        client.onRequest("showStatusBar", (text: string) => {
-            if (!statusBar) {
-                statusBar = window.createStatusBarItem(StatusBarAlignment.Left, 0);
+        client.onRequest("showStatusBar", (message: { text: string, color: string }) => {
+            let statusBar = window.createStatusBarItem(StatusBarAlignment.Left, 0);
+            if (message.color != "") {
+                statusBar.color = message.color;
             }
-            statusBar.text = text;
+            statusBar.text = message.text;
             statusBar.show();
+            statusBars.push(statusBar);
         });
         client.onRequest("hideStatusBar", () => {
-            if (statusBar) {
-                statusBar.hide();
+            for (let i = 0; i < statusBars.length; i++) {
+                statusBars[i].dispose();
             }
+            statusBars = [];
         });
         // 后端发送Quick目录
         client.onRequest("quickRoot", (text: string) => {

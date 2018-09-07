@@ -68,9 +68,10 @@ class Proxy0 {
     /**
      * 显示任务栏信息
      * @param text 
+     * @param color 
      */
-    public showStatusBar(text: string): void {
-        this._connetion.sendRequest("showStatusBar", text);
+    public showStatusBar(text: string, color: string = ""): void {
+        this._connetion.sendRequest("showStatusBar", { text: text, color: color });
     }
     /**
      * 隐藏任务栏

@@ -77,8 +77,15 @@ class Builder0 {
         if (!Config.isQuickX) {
             statusText = "初始化 lua 项目...";
         }
-        ServerProxy.showStatusBar("$(zap) " + statusText);
+        ServerProxy.showStatusBar("$(zap)", "#00ff00");
+        ServerProxy.showStatusBar(statusText);
 
+        // 延时
+        setTimeout(() => {
+            this.initWorkspace2();
+        }, 150);
+    }
+    private initWorkspace2(): void {
         if (Config.isQuickX) {
             this.initCpp();
         }
@@ -237,7 +244,7 @@ class Builder0 {
             if (!root.endsWith("/")) {
                 root += "/";
             }
-            loc = [data["line"], data["char"], Config.quickRoot + data["src"]];
+            loc = [data["line"], data["char"], root + data["src"]];
         }
         return loc;
     }

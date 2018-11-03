@@ -39,8 +39,10 @@ class Config0 {
      */
     public initWorkspace(workspaceRoot: string) {
         this._workspaceRoot = workspaceRoot;
-        let cocos2d = workspaceRoot + "/src/cocos/cocos2d";
-        this._isQuickX = fs.existsSync(new URL(cocos2d));
+        // let cocos2d = workspaceRoot + "/src/cocos/cocos2d";
+        // this._isQuickX = fs.existsSync(new URL(cocos2d));
+        // 默认都是quick项目
+        this._isQuickX = true;
 
         // 插件所在目录
         let root = path.join(__dirname, "../../../");

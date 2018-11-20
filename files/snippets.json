@@ -98,5 +98,29 @@
         "body": [
             "local ${1:a} = $0"
         ]
+    },
+    "for": {
+        "prefix": "for",
+        "body": [
+            "for ${1:i}=${2:1},${3:10} do",
+            "\t${0:print(i)}",
+            "end"
+        ]
+    },
+    "fori": {
+        "prefix": "fori",
+        "body": [
+            "for ${1:i},${2:v} in ipairs(${3:table}) do",
+            "\t${0:print(i,v)}",
+            "end"
+        ]
+    },
+    "forp": {
+        "prefix": "forp",
+        "body": [
+            "for ${1:k},${2:v} in pairs(${3:table}) do",
+            "\t${0:print(k,v)}",
+            "end"
+        ]
     }
 }

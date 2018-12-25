@@ -254,6 +254,9 @@ class Builder0 {
      * @param data 
      */
     private parse(uri: string, data: string) {
+        if (!data) {
+            return;
+        }
         // 要转成crlf结尾，不然解析的时候行号不对
         data = setLineEnding(data, "CRLF");
         try {

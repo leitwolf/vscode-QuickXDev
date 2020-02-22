@@ -2,7 +2,7 @@
     "name": "vscode-quickxdev",
     "displayName": "QuickXDev",
     "description": "Quick-Cocos2dx develop for vscode",
-    "version": "0.0.7",
+    "version": "0.1.0",
     "publisher": "lonewolf",
     "engines": {
         "vscode": "^1.25.0"
@@ -60,6 +60,12 @@
             {
                 "language": "lua",
                 "path": "./files/snippets.json"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "quickxdev.runPlayer",
+                "key": "f6"
             }
         ]
     },

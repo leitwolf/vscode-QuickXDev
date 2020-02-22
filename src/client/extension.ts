@@ -1,7 +1,7 @@
 'use strict';
 import * as path from "path";
 import { ServerOptions, TransportKind, LanguageClientOptions, LanguageClient } from "vscode-languageclient";
-import { OutputChannel, WorkspaceFolder, TextDocument, workspace, ExtensionContext, window, StatusBarItem, StatusBarAlignment, env, commands } from "vscode";
+import { OutputChannel, WorkspaceFolder, TextDocument, workspace, ExtensionContext, window, StatusBarItem, StatusBarAlignment, env, commands, Uri } from "vscode";
 import { existsSync, readFileSync } from "fs";
 import { URL } from "url";
 import { execFile, ChildProcess } from "child_process";
@@ -120,6 +120,42 @@ function runPlayer() {
         window.showErrorMessage("没有设置QuickX目录");
         return;
     }
+
+    let activeFile = window.activeTextEditor.document.fileName;
+    let workDirUri = workspace.getWorkspaceFolder(URI.file(activeFile)).uri;
+    let client = clients.get(workDirUri.toString());
+    // 不在当前打开的项目中
+    if (!client) {
+        return;
+    }
+
+    // 检测是否是4.0版本
+    let isVersion4 = false;
+    let gameRunnerFolder = quickRoot + "/tools/runner/";
+    if (existsSync(new URL(gameRunnerFolder))) {
+        isVersion4 = true;
+    }
+
+    client.sendRequest("isQuickX").then((isQuickX: boolean) => {
+        if (!isQuickX) {
+            let msg = "非 quick 项目下不能运行 Player！";
+            if (isVersion4) {
+                msg = "非 quick 项目下不能运行 LuaGameRunner！";
+            }
+            window.showErrorMessage(msg);
+            return;
+        }
+        if (!isVersion4) {
+            doRunPlayer(workDirUri);
+        }
+        else {
+            doRunGameRunner(workDirUri);
+        }
+    });
+}
+
+// 运行3.7版的Player
+function doRunPlayer(workDirUri: Uri) {
     let playerPath = quickRoot + "/quick/player/";
     if (process.platform == "win32") {
         playerPath += "win32/player3.exe";
@@ -137,47 +173,79 @@ function runPlayer() {
         return;
     }
 
-    let activeFile = window.activeTextEditor.document.fileName;
-    let workDirUri = workspace.getWorkspaceFolder(URI.file(activeFile)).uri;
-    let client = clients.get(workDirUri.toString());
-    if (!client) {
-        return
+    let playerFsPath = URI.parse(playerPath).fsPath;
+    // 加上参数
+    let args: string[] = [];
+    args.push("-workdir");
+    args.push(workDirUri.fsPath);
+    let configPath = workDirUri.toString() + "/src/config.lua";
+    let config = getQuickConfig(configPath);
+    if (config) {
+        let debug = config.debug;
+        if (debug == 0) {
+            args.push("-disable-write-debug-log");
+            args.push("-disable-console");
+        }
+        else if (debug == 1) {
+            args.push("-disable-write-debug-log");
+            args.push("-console");
+        }
+        else if (debug == 2) {
+            args.push("-write-debug-log");
+            args.push("-console");
+        }
+        args.push("-size");
+        args.push(config.width + "x" + config.height);
     }
-    client.sendRequest("isQuickX").then((isQuickX: boolean) => {
-        if (!isQuickX) {
-            window.showErrorMessage("非 quick 项目下不能运行 Player！");
-            return;
-        }
 
-        let playerFsPath = URI.parse(playerPath).fsPath;
-        // 加上参数
-        let args: string[] = [];
-        args.push("-workdir");
-        args.push(workDirUri.fsPath);
-        let configPath = workDirUri.toString() + "/src/config.lua";
-        let config = getQuickConfig(configPath);
-        if (config) {
-            let debug = config.debug;
-            if (debug == 0) {
-                args.push("-disable-write-debug-log");
-                args.push("-disable-console");
-            }
-            else if (debug == 1) {
-                args.push("-disable-write-debug-log");
-                args.push("-console");
-            }
-            else if (debug == 2) {
-                args.push("-write-debug-log");
-                args.push("-console");
-            }
-            args.push("-size");
-            args.push(config.width + "x" + config.height);
-        }
+    // 运行
+    playerProcess = execFile(playerFsPath, args);
 
-        // 运行
-        playerProcess = execFile(playerFsPath, args);
-    });
 }
+
+// 运行4.0版的LuaGameRunner
+function doRunGameRunner(workDirUri: Uri) {
+    let runnerPath = quickRoot + "/tools/runner/bin/";
+    if (process.platform == "win32") {
+        runnerPath += "win32/LuaGameRunner.exe";
+    }
+    else if (process.platform == "darwin") {
+        runnerPath += "LuaGameRunner.app/Contents/MacOS/LuaGameRunner";
+    }
+    else {
+        window.showErrorMessage("抱歉，不支持当前制作系统!");
+        return;
+    }
+
+    if (!existsSync(new URL(runnerPath))) {
+        window.showErrorMessage("LuaGameRunner不存在");
+        return;
+    }
+
+    let runnerFsPath = URI.parse(runnerPath).fsPath;
+    // 加上参数
+    let args: string[] = [];
+    args.push("--gamedir");
+    args.push(workDirUri.fsPath);
+    args.push("--writedir");
+    args.push(workDirUri.fsPath);
+    let configPath = workDirUri.toString() + "/src/config.lua";
+    let config = getQuickConfig(configPath);
+    if (config) {
+        let debug = config.debug;
+        if (debug > 0) {
+            args.push("--log");
+        }
+        args.push("--width");
+        args.push(config.width + "");
+        args.push("--height");
+        args.push(config.height + "");
+    }
+
+    // 运行
+    playerProcess = execFile(runnerFsPath, args);
+}
+
 // 获取Quick项目配置信息
 function getQuickConfig(configPath: string): { debug: number, width: number, height: number } {
     if (!existsSync(new URL(configPath))) {

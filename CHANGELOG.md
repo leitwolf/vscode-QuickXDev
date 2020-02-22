@@ -1,3 +1,7 @@
+# [0.1.0] - 2020-02-21
+- 部分适配Cocos2d-Lua-Community 4.0版本，目前新版的LuaGameRunner可用。
+- 绑定 F6 键到 "在Player中运行"
+
 # [0.0.7] - 2018-12-25
 - 修复一个可能引发crash的bug。
 
